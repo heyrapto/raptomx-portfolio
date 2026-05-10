@@ -21,42 +21,6 @@ interface Project {
   slug: string;
 }
 
-const mockProjects: Project[] = [
-  {
-    id: '1',
-    title: "AI-Powered Code Assistant",
-    description: "An intelligent code completion and suggestion tool that leverages machine learning to assist developers in writing better code faster.",
-    technologies: ["TypeScript", "Python", "React", "TensorFlow", "FastAPI"],
-    image: "https://picsum.photos/800/400?random=1",
-    github: "https://github.com/example/code-assistant",
-    live: "https://code-assistant.demo.com",
-    featured: true,
-    slug: "ai-code-assistant"
-  },
-  {
-    id: '2',
-    title: "Cloud Infrastructure Dashboard",
-    description: "Real-time monitoring and management dashboard for cloud infrastructure with cost optimization insights and automated scaling.",
-    technologies: ["React", "Node.js", "AWS", "D3.js", "GraphQL"],
-    image: "https://picsum.photos/800/400?random=2",
-    github: "https://github.com/example/cloud-dashboard",
-    live: "https://cloud-dashboard.demo.com",
-    featured: true,
-    slug: "cloud-dashboard"
-  },
-  {
-    id: '3',
-    title: "E-commerce Platform",
-    description: "Modern e-commerce platform with real-time inventory, AI-powered recommendations, and seamless payment integration.",
-    technologies: ["Next.js", "MongoDB", "Stripe", "Redis", "TailwindCSS"],
-    image: "https://picsum.photos/800/400?random=3",
-    github: "https://github.com/example/ecommerce",
-    live: "https://ecommerce.demo.com",
-    featured: true,
-    slug: "ecommerce-platform"
-  }
-];
-
 export default function ProjectsSection() {
   const [filter] = useState("featured");
   const { data: projectsData, isLoading, error } = useFeaturedProjects();
@@ -65,7 +29,7 @@ export default function ProjectsSection() {
   const filterRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<(HTMLDivElement | null)[]>([]);
   const loadMoreRef = useRef<HTMLDivElement>(null);
-  const [projects, setProjects] = useState<Project[]>(mockProjects);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     if (projectsData?.length) {
@@ -77,9 +41,9 @@ export default function ProjectsSection() {
     const ctx = gsap.context(() => {
       // Header animation
       gsap.fromTo(headerRef.current,
-        { 
-          opacity: 0, 
-          y: 100 
+        {
+          opacity: 0,
+          y: 100
         },
         {
           opacity: 1,
@@ -96,9 +60,9 @@ export default function ProjectsSection() {
 
       // Filter buttons animation
       gsap.fromTo(filterRef.current,
-        { 
-          opacity: 0, 
-          y: 50 
+        {
+          opacity: 0,
+          y: 50
         },
         {
           opacity: 1,
@@ -116,8 +80,8 @@ export default function ProjectsSection() {
 
       // Projects staggered animation
       gsap.fromTo(projectsRef.current,
-        { 
-          opacity: 0, 
+        {
+          opacity: 0,
           y: 100,
           scale: 0.8
         },
@@ -138,9 +102,9 @@ export default function ProjectsSection() {
 
       // Load more button animation
       gsap.fromTo(loadMoreRef.current,
-        { 
-          opacity: 0, 
-          y: 50 
+        {
+          opacity: 0,
+          y: 50
         },
         {
           opacity: 1,
@@ -165,8 +129,8 @@ export default function ProjectsSection() {
   useEffect(() => {
     if (projectsRef.current.length > 0) {
       gsap.fromTo(projectsRef.current,
-        { 
-          opacity: 0, 
+        {
+          opacity: 0,
           scale: 0.8,
           y: 20
         },
@@ -198,20 +162,19 @@ export default function ProjectsSection() {
       setProjects(apiProjects);
     } else if (error) {
       console.warn('Failed to load projects, using mock data', error);
-      if (projects.length === 0) setProjects(mockProjects);
     }
   }, [projectsData, error, projects.length]);
 
-  const filteredProjects = filter === "all" 
-    ? projects 
-    : filter === "featured" 
-    ? projects.filter(p => p.featured)
-    : projects.filter(p => !p.featured);
+  const filteredProjects = filter === "all"
+    ? projects
+    : filter === "featured"
+      ? projects.filter(p => p.featured)
+      : projects.filter(p => !p.featured);
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      id="projects-section" 
+      id="projects-section"
       className="bg-black text-white px-4 md:px-10"
     >
       {/* Status banners */}
@@ -226,9 +189,9 @@ export default function ProjectsSection() {
 
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <Heading 
-          heading={"Featured Projects"} 
-          paragraph={"A collection of projects that showcase my skills in modern web development, from concept to deployment."} 
+        <Heading
+          heading={"Featured Projects"}
+          paragraph={"A collection of projects that showcase my skills in modern web development, from concept to deployment."}
         />
 
         {/* Projects Grid */}

@@ -3,54 +3,10 @@ import { PageHeader } from '../../components/ui/page-header';
 import { useGalleryItems } from '../../hooks/queries/use-portfolio-data';
 import { GalleryProps } from '../../types/gallery';
 
-const mockGalleryItems: GalleryProps[] = [
-  {
-    id: '1',
-    title: 'Modern Web Application',
-    category: 'Development',
-    description: 'Building scalable and performant web applications using modern technologies',
-    imageUrl: 'https://picsum.photos/800/600?random=1',
-  },
-  {
-    id: '2',
-    title: 'User Interface Design',
-    category: 'Design',
-    description: 'Creating intuitive and beautiful user interfaces that delight users',
-    imageUrl: 'https://picsum.photos/800/600?random=2',
-  },
-  {
-    id: '3',
-    title: 'Mobile Application',
-    category: 'Development',
-    description: 'Developing cross-platform mobile applications with React Native',
-    imageUrl: 'https://picsum.photos/800/600?random=3',
-  },
-  {
-    id: '4',
-    title: 'System Architecture',
-    category: 'Architecture',
-    description: 'Designing robust and scalable system architectures',
-    imageUrl: 'https://picsum.photos/800/600?random=4',
-  },
-  {
-    id: '5',
-    title: 'Code Quality',
-    category: 'Development',
-    description: 'Maintaining high code quality through testing and best practices',
-    imageUrl: 'https://picsum.photos/800/600?random=5',
-  },
-  {
-    id: '6',
-    title: 'User Experience',
-    category: 'Design',
-    description: 'Crafting seamless user experiences through thoughtful design',
-    imageUrl: 'https://picsum.photos/800/600?random=6',
-  }
-];
 
 export const Gallery: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
-  const [galleryItems, setGallery] = useState<GalleryProps[]>(mockGalleryItems);
+  const [galleryItems, setGallery] = useState<GalleryProps[]>([]);
   const { data: galleryData, isLoading, error } = useGalleryItems();
 
   useEffect(() => {
@@ -58,13 +14,12 @@ export const Gallery: React.FC = () => {
       setGallery(galleryData.data.gallery);
     } else if (error) {
       console.warn('Failed to load gallery items, using mock data', error);
-      if (galleryItems.length === 0) setGallery(mockGalleryItems);
     }
   }, [galleryData, error, galleryItems.length]);
 
   const openImageModal = (index: number) => {
     setSelectedImage(index);
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden';
   };
 
   const closeImageModal = () => {
@@ -78,7 +33,7 @@ export const Gallery: React.FC = () => {
         heading="Gallery"
         paragraph="Some of the memories I've shared"
       />
-      
+
       {/* Status banners */}
       <div className="w-full max-w-[1200px] mx-auto px-4">
         {isLoading && (
@@ -88,22 +43,22 @@ export const Gallery: React.FC = () => {
           <p className="text-sm text-yellow-400 text-center mb-4">Unable to load gallery items — showing sample content</p>
         )}
       </div>
-      
+
       {/* Gallery grid */}
       <div className="max-w-[1200px] mx-auto px-4 py-16 w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {galleryItems?.map((item: any, index: number) => (
-            <div 
+            <div
               key={item.id}
               className={`relative overflow-hidden rounded-[25px] border border-gray-800 
-                ${index % 3 === 0 ? 'md:col-span-2 lg:col-span-1 aspect-square' : 
+                ${index % 3 === 0 ? 'md:col-span-2 lg:col-span-1 aspect-square' :
                   index % 5 === 0 ? 'lg:col-span-2 aspect-video' : 'aspect-square'}
                 cursor-pointer transition-transform duration-500 hover:scale-[1.02] group`}
               onClick={() => openImageModal(index)}
             >
-              <img 
-                src={item.imageUrl} 
-                alt={item.title} 
+              <img
+                src={item.imageUrl}
+                alt={item.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100">
@@ -124,23 +79,23 @@ export const Gallery: React.FC = () => {
 
       {/* Image modal */}
       {selectedImage !== null && galleryItems && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
           onClick={closeImageModal}
         >
-          <div 
+          <div
             className="relative max-w-5xl w-full max-h-[90vh] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            <button 
+            <button
               className="absolute top-4 right-4 text-white text-4xl z-10 hover:text-gray-300"
               onClick={closeImageModal}
             >
               &times;
             </button>
-            <img 
-              src={galleryItems[selectedImage].imageUrl} 
-              alt={galleryItems[selectedImage].title} 
+            <img
+              src={galleryItems[selectedImage].imageUrl}
+              alt={galleryItems[selectedImage].title}
               className="w-full h-full object-contain"
             />
             <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 p-6">

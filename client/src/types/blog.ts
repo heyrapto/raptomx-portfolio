@@ -1,4 +1,4 @@
-export interface BlogProps  {
+export interface BlogProps {
     id: number,
     _id: string,
     title: string,
