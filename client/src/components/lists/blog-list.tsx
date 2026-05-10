@@ -6,7 +6,7 @@ import { BlogProps } from "../../types/blog";
 
 const mockBlogs: BlogProps[] = [
   {
-    _id: 1,
+    _id: "1",
     title: 'Building Scalable Web Applications',
     info: 'Learn how to architect and build web applications that can handle millions of users with optimal performance.',
     author: 'John Developer',
@@ -15,7 +15,7 @@ const mockBlogs: BlogProps[] = [
     featured: true
   },
   {
-    _id: 2,
+    _id: "2",
     title: 'Modern Frontend Development Practices',
     info: 'Explore the latest practices and tools in frontend development that help create better user experiences.',
     author: 'Sarah Engineer',
@@ -24,7 +24,7 @@ const mockBlogs: BlogProps[] = [
     featured: true
   },
   {
-    _id: 3,
+    _id: "3",
     title: 'Getting Started with TypeScript',
     info: 'A comprehensive guide to start using TypeScript in your JavaScript projects for better type safety.',
     author: 'Mike Coder',
@@ -32,7 +32,7 @@ const mockBlogs: BlogProps[] = [
     avatar: 'https://picsum.photos/800/400?random=3',
   },
   {
-    _id: 4,
+    _id: "4",
     title: 'State Management in React Applications',
     info: 'Compare different state management solutions and learn when to use each in your React applications.',
     author: 'Emily React',
