@@ -206,16 +206,31 @@ export const sendNewsletterToAll = async (req: Request, res: Response) => {
     let successCount = 0;
     let failureCount = 0;
     
-    for (const subscriber of subscribers) {
+    // Send emails in parallel
+    const emailPromises = subscribers.map(async (subscriber) => {
       try {
         const unsubscribeUrl = `${process.env.API_URL}/api/newsletter/unsubscribe/${subscriber.unsubscribeToken}`;
-        await sendEmail(subscriber.email, subject, content + `<p>If you wish to unsubscribe, <a href="${unsubscribeUrl}">click here</a>.</p>`);
-        successCount++;
+        await sendEmail(
+          subscriber.email, 
+          subject, 
+          content + `<p>If you wish to unsubscribe, <a href="${unsubscribeUrl}">click here</a>.</p>`
+        );
+        return { success: true };
       } catch (error) {
         console.error(`Failed to send newsletter to ${subscriber.email}:`, error);
+        return { success: false };
+      }
+    });
+
+    const results = await Promise.allSettled(emailPromises);
+    
+    results.forEach((result) => {
+      if (result.status === 'fulfilled' && (result.value as any).success) {
+        successCount++;
+      } else {
         failureCount++;
       }
-    }
+    });
     
     res.status(200).json({
       status: 'success',
@@ -245,49 +260,37 @@ export const sendNewsletterNotification = async (contentType: 'blog' | 'project'
     }
     
     let subject = '';
-    let template = '';
     
     // Prepare email content based on content type
     if (contentType === 'blog') {
       subject = `New Blog Post: ${content.title}`;
-      
-      for (const subscriber of subscribers) {
-        const unsubscribeUrl = `${process.env.API_URL}/api/newsletter/unsubscribe/${subscriber.unsubscribeToken}`;
-        template = getBlogNewsletterTemplate(content, unsubscribeUrl);
-        
-        try {
-          await sendEmail(subscriber.email, subject, template);
-        } catch (error) {
-          console.error(`Failed to send blog notification to ${subscriber.email}:`, error);
-        }
-      }
     } else if (contentType === 'project') {
       subject = `New Project: ${content.title}`;
-      
-      for (const subscriber of subscribers) {
-        const unsubscribeUrl = `${process.env.API_URL}/api/newsletter/unsubscribe/${subscriber.unsubscribeToken}`;
-        template = getProjectNewsletterTemplate(content, unsubscribeUrl);
-        
-        try {
-          await sendEmail(subscriber.email, subject, template);
-        } catch (error) {
-          console.error(`Failed to send project notification to ${subscriber.email}:`, error);
-        }
-      }
     } else if (contentType === 'gallery') {
       subject = `New Gallery Addition: ${content.title}`;
-      
-      for (const subscriber of subscribers) {
-        const unsubscribeUrl = `${process.env.API_URL}/api/newsletter/unsubscribe/${subscriber.unsubscribeToken}`;
-        template = getGalleryNewsletterTemplate(content, unsubscribeUrl);
-        
-        try {
-          await sendEmail(subscriber.email, subject, template);
-        } catch (error) {
-          console.error(`Failed to send gallery notification to ${subscriber.email}:`, error);
-        }
-      }
     }
+      
+    // Send emails in parallel
+    const emailPromises = subscribers.map(async (subscriber) => {
+      const unsubscribeUrl = `${process.env.API_URL}/api/newsletter/unsubscribe/${subscriber.unsubscribeToken}`;
+      let itemTemplate = '';
+      
+      if (contentType === 'blog') {
+        itemTemplate = getBlogNewsletterTemplate(content, unsubscribeUrl);
+      } else if (contentType === 'project') {
+        itemTemplate = getProjectNewsletterTemplate(content, unsubscribeUrl);
+      } else if (contentType === 'gallery') {
+        itemTemplate = getGalleryNewsletterTemplate(content, unsubscribeUrl);
+      }
+      
+      try {
+        await sendEmail(subscriber.email, subject, itemTemplate);
+      } catch (error) {
+        console.error(`Failed to send ${contentType} notification to ${subscriber.email}:`, error);
+      }
+    });
+
+    await Promise.allSettled(emailPromises);
     
     console.log(`Newsletter notification sent for new ${contentType}`);
   } catch (error) {

@@ -116,7 +116,7 @@ export const submitContactMessage = async (req: Request, res: Response) => {
         <p><a href="${process.env.API_URL}/dashboard/contacts">View in Dashboard</a></p>
       `;
       
-      await sendEmail(adminEmail, emailSubject, emailContent);
+      sendEmail(adminEmail, emailSubject, emailContent);
     } catch (error) {
       console.error('Failed to send admin notification email:', error);
       // Don't throw error, just log it

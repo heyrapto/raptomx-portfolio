@@ -106,7 +106,7 @@ export const createGalleryItem = async (req: Request, res: Response) => {
     
     // Send newsletter notification
     try {
-      await sendNewsletterNotification('gallery', newGalleryItem);
+      sendNewsletterNotification('gallery', newGalleryItem);
     } catch (error) {
       console.error('Failed to send newsletter notification:', error);
       // Don't throw error, just log it

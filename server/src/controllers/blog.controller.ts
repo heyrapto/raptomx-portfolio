@@ -146,7 +146,7 @@ export const createBlog = async (req: Request, res: Response) => {
     // If the blog is published, send newsletter notification
     if (newBlog.published) {
       try {
-        await sendNewsletterNotification('blog', newBlog);
+        sendNewsletterNotification('blog', newBlog);
       } catch (error) {
         console.error('Failed to send newsletter notification:', error);
         // Don't throw error, just log it
@@ -225,7 +225,7 @@ export const updateBlog = async (req: Request, res: Response) => {
     // If the blog is being published for the first time, send newsletter notification
     if (shouldSendNewsletter) {
       try {
-        await sendNewsletterNotification('blog', updatedBlog);
+        sendNewsletterNotification('blog', updatedBlog);
       } catch (error) {
         console.error('Failed to send newsletter notification:', error);
         // Don't throw error, just log it
@@ -330,7 +330,7 @@ export const togglePublished = async (req: Request, res: Response) => {
     // If the blog is being published for the first time, send newsletter notification
     if (!wasPublished && blog.published) {
       try {
-        await sendNewsletterNotification('blog', blog);
+        sendNewsletterNotification('blog', blog);
       } catch (error) {
         console.error('Failed to send newsletter notification:', error);
         // Don't throw error, just log it

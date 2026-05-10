@@ -127,7 +127,7 @@ export const createProject = async (req: Request, res: Response) => {
     
     // Send newsletter notification
     try {
-      await sendNewsletterNotification('project', newProject);
+      sendNewsletterNotification('project', newProject);
     } catch (error) {
       console.error('Failed to send newsletter notification:', error);
       // Don't throw error, just log it
